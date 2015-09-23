@@ -11,8 +11,6 @@ class rdiff_backup::server (
   validate_absolute_path($logs_dir)
 
   include ::buildenv::c
-  include ::python::dev
-
 
   file {'/opt/rdiff-backup':
     ensure => directory,
