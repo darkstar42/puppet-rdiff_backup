@@ -12,7 +12,6 @@ from os.path import join
 from multiprocessing import Pool
 from commands import getstatusoutput
 
-_RBDIR    = "/opt/rdiff-backup"
 _LOGDIR   = "<%= @logs_dir %>"
 _CONFIG   = "/etc/multiprocessing-rdiff-backup.conf"
 _LOCKFILE = "/tmp/multiprocessing-rdiff-backup.running"
@@ -26,15 +25,12 @@ def backup(host):
   )
   
   args = []
-  args.append("%s/rdiff-backup-%s/bin/rdiff-backup" % (_RBDIR, host['version']))
+  args.append("/usr/bin/rdiff-backup")
   args.extend(shlex.split(host['args']))
   args.append(host['source'])
   args.append(join(host['destination'], host['host']))
  
   env = []
-  for l in ["lib", "lib64"]:
-    env.append("%s/rdiff-backup-%s/%s/python%s.%s/site-packages" % (
-      _RBDIR, host['version'], l, sys.version_info[0], sys.version_info[1]))
 
   proc = subprocess.Popen(
     args,
@@ -50,7 +46,7 @@ def backup(host):
   if not status:
     start_time = time.time()
     args = []
-    args.append("%s/rdiff-backup-%s/bin/rdiff-backup" % (_RBDIR, host['version']))
+    args.append("/usr/bin/rdiff-backup")
     args.extend(["--remove-older-than", host['retention'], "--force", join(host['destination'], host['host'])])
 
     proc = subprocess.Popen(
